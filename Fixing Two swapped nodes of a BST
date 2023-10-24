@@ -1,0 +1,67 @@
+Two of the nodes of a Binary Search Tree (BST) are swapped. Fix (or correct) the BST by swapping them back. Do not change the structure of the tree.
+Note: It is guaranteed that the given input will form BST, except for 2 nodes that will be wrong.
+ 
+Example 1:
+Input:
+       10
+     /    \
+    5      8
+   / \
+  2   20
+Output: 1
+
+
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def correctBST(root):
+    def inOrder(node):
+        nonlocal first, middle, last, prev
+        if node is None:
+            return
+        inOrder(node.left)
+        if prev and node.val < prev.val:
+            if not first:
+                first = prev
+            middle = node
+        if first and node.val < prev.val:
+            last = node
+        prev = node
+        inOrder(node.right)
+
+    # Initialize variables
+    first, middle, last, prev = None, None, None, None
+
+    # Traverse the tree and find misplaced nodes
+    inOrder(root)
+
+    # Swap the values of first and last misplaced nodes
+    if first and last:
+        first.val, last.val = last.val, first.val
+
+# Utility function to print the tree in-order
+def inOrderTraversal(root):
+    if root:
+        inOrderTraversal(root.left)
+        print(root.val, end=" ")
+        inOrderTraversal(root.right)
+
+# Example
+root = TreeNode(10)
+root.left = TreeNode(5)
+root.right = TreeNode(8)
+root.left.left = TreeNode(2)
+root.left.right = TreeNode(20)
+
+print("Original BST:")
+inOrderTraversal(root)
+print()
+
+correctBST(root)
+
+print("\nCorrected BST:")
+inOrderTraversal(root)
